@@ -10,10 +10,12 @@ window.addEventListener("DOMContentLoaded", () => {
 async function carregarFFmpeg() {
   if (ffmpegLoaded) return;
 
-  ffmpeg = createFFmpeg({
-    log: true,
-    corePath: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js"
-  });
+ ffmpeg = createFFmpeg({
+  log: true,
+  corePath: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js",
+  worker: false
+});
+
 
   await ffmpeg.load();
   ffmpegLoaded = true;
