@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compressor de Vídeo para Discord</title>
+
+  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
+  <script src="https://unpkg.com/@ffmpeg/util@0.12.6/dist/util.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>🎥 Compressor de Vídeo para Discord</h1>
+  <p>Comprime vídeos para até <b>10MB</b> (sem Nitro).</p>
+
+  <input type="file" id="videoInput" accept="video/*" />
+  <button onclick="comprimir()">Comprimir</button>
+
+  <progress id="progress" value="0" max="1"></progress>
+
+  <script src="script.js"></script>
+</body>
+</html>
