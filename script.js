@@ -15,9 +15,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   fetchFile = FF.fetchFile;
 
   ffmpeg = FF.createFFmpeg({
-    log: true,
-    corePath: "https://unpkg.com/@ffmpeg/core@0.12.6/dist/ffmpeg-core.js"
-  });
+  log: true,
+  corePath: "./ffmpeg-core/ffmpeg-core.js"
+});
+
 
   status.innerText = "✅ Pronto para usar";
 });
