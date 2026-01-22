@@ -1,3 +1,5 @@
+const { createFFmpeg, fetchFile } = FFmpeg;
+
 let ffmpeg;
 let ffmpegLoaded = false;
 
@@ -5,24 +7,17 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("status").innerText = "✅ Pronto para usar";
 });
 
-// converte File → Uint8Array (substitui fetchFile)
-async function fileToUint8Array(file) {
-  const buffer = await file.arrayBuffer();
-  return new Uint8Array(buffer);
-}
-
 async function carregarFFmpeg() {
   if (ffmpegLoaded) return;
 
-  ffmpeg = new FFmpeg.FFmpeg();
-
-  await ffmpeg.load({
-    coreURL: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js",
-    wasmURL: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.wasm"
+  ffmpeg = createFFmpeg({
+    log: true,
+    corePath: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js"
   });
 
+  await ffmpeg.load();
   ffmpegLoaded = true;
-  console.log("FFmpeg pronto pra usar");
+  console.log("FFmpeg carregado");
 }
 
 function getDuracao(file) {
@@ -35,7 +30,7 @@ function getDuracao(file) {
 }
 
 function calcularBitrate(duracao) {
-  const tamanhoMaxBits = 10 * 8 * 1024 * 1024; // 10MB
+  const tamanhoMaxBits = 10 * 8 * 1024 * 1024;
   const bitrateTotal = tamanhoMaxBits / duracao;
   const audio = 128000;
   const video = Math.max(bitrateTotal - audio, 300000);
@@ -60,11 +55,7 @@ async function comprimir() {
     const file = input.files[0];
 
     status.innerText = "📥 Preparando vídeo...";
-    ffmpeg.FS(
-      "writeFile",
-      "input.mp4",
-      await fileToUint8Array(file)
-    );
+    ffmpeg.FS("writeFile", "input.mp4", await fetchFile(file));
 
     const duracao = await getDuracao(file);
     const bitrate = calcularBitrate(duracao);
