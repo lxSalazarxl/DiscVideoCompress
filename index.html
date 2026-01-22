@@ -7,22 +7,23 @@
   <!-- FFmpeg -->
   <script defer src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
 
-  <!-- Seu script -->
+  <!-- Seu JS -->
   <script defer src="script.js"></script>
 
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
   <h1>🎥 Compressor de Vídeo para Discord</h1>
-  <p>Comprime vídeos para até <b>10MB</b> (sem Nitro).</p>
+
+  <!-- ⚠️ ESSE ID É OBRIGATÓRIO -->
+  <p id="status">Inicializando...</p>
 
   <input type="file" id="videoInput" accept="video/*" />
-  <button onclick="comprimir()">Comprimir</button>
+  <br><br>
 
-  <progress id="progress" value="0" max="1"></progress>
+  <!-- ⚠️ ESSE ID É OBRIGATÓRIO -->
+  <button id="btn" onclick="comprimir()">Comprimir</button>
 
-  
 </body>
 </html>
