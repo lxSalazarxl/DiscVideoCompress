@@ -6,18 +6,21 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   status.innerText = "🧠 Preparando compressor...";
 
-  const FF = window.FFmpeg;
-  if (!FF) {
-    status.innerText = "❌ FFmpeg não carregou";
-    return;
+  const { createFFmpeg, fetchFile } = FFmpeg;
+
+const ffmpeg = createFFmpeg({
+  log: true,
+  corePath: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js"
+});
+
+async function comprimir() {
+  if (!ffmpeg.isLoaded()) {
+    console.log("Carregando FFmpeg...");
+    await ffmpeg.load();
   }
 
-  fetchFile = FF.fetchFile;
-
-  ffmpeg = FF.createFFmpeg({
-  log: true,
-  corePath: "./ffmpeg-core/ffmpeg-core.js"
-});
+  console.log("FFmpeg carregado!");
+}
 
 
   status.innerText = "✅ Pronto para usar";
