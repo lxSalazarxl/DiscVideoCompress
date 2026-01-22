@@ -3,11 +3,9 @@ let fetchFile;
 
 window.addEventListener("DOMContentLoaded", async () => {
   const status = document.getElementById("status");
-  const btn = document.getElementById("btn");
 
   status.innerText = "🧠 Preparando compressor...";
 
-  // Aguarda o FFmpeg existir
   const FF = window.FFmpeg;
   if (!FF) {
     status.innerText = "❌ FFmpeg não carregou";
@@ -15,7 +13,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   fetchFile = FF.fetchFile;
-  ffmpeg = FF.createFFmpeg({ log: true });
+
+  ffmpeg = FF.createFFmpeg({
+    log: true,
+    corePath: "https://unpkg.com/@ffmpeg/core@0.12.6/dist/ffmpeg-core.js"
+  });
 
   status.innerText = "✅ Pronto para usar";
 });
