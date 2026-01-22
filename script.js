@@ -1,10 +1,15 @@
-
-let fetchFile;
 let ffmpeg;
 let ffmpegLoaded = false;
 
-window.addEventListener("DOMContentLoaded", async () => {
-  const status = document.getElementById("status");
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("status").innerText = "✅ Pronto para usar";
+});
+
+// converte File → Uint8Array (substitui fetchFile)
+async function fileToUint8Array(file) {
+  const buffer = await file.arrayBuffer();
+  return new Uint8Array(buffer);
+}
 
 async function carregarFFmpeg() {
   if (ffmpegLoaded) return;
@@ -20,28 +25,6 @@ async function carregarFFmpeg() {
   console.log("FFmpeg pronto pra usar");
 }
 
-async function comprimir() {
-  try {
-    await carregarFFmpeg();
-    alert("FFmpeg carregado com sucesso 🚀");
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function comprimir() {
-  if (!ffmpeg.isLoaded()) {
-    console.log("Carregando FFmpeg...");
-    await ffmpeg.load();
-  }
-
-  console.log("FFmpeg carregado!");
-}
-
-
-  status.innerText = "✅ Pronto para usar";
-});
-
 function getDuracao(file) {
   return new Promise(resolve => {
     const video = document.createElement("video");
@@ -52,7 +35,7 @@ function getDuracao(file) {
 }
 
 function calcularBitrate(duracao) {
-  const tamanhoMaxBits = 10 * 8 * 1024 * 1024;
+  const tamanhoMaxBits = 10 * 8 * 1024 * 1024; // 10MB
   const bitrateTotal = tamanhoMaxBits / duracao;
   const audio = 128000;
   const video = Math.max(bitrateTotal - audio, 300000);
@@ -62,28 +45,31 @@ function calcularBitrate(duracao) {
 async function comprimir() {
   const status = document.getElementById("status");
   const btn = document.getElementById("btn");
+  const input = document.getElementById("videoInput");
 
   try {
-    const file = document.getElementById("videoInput").files[0];
-    if (!file) {
+    if (!input.files.length) {
       alert("Selecione um vídeo primeiro");
       return;
     }
 
     btn.disabled = true;
+    status.innerText = "⚙️ Carregando FFmpeg...";
+    await carregarFFmpeg();
 
-    if (!ffmpeg.isLoaded()) {
-      status.innerText = "⏳ Carregando FFmpeg (primeira vez demora)...";
-      await ffmpeg.load();
-    }
+    const file = input.files[0];
 
     status.innerText = "📥 Preparando vídeo...";
-    ffmpeg.FS("writeFile", "input.mp4", await fetchFile(file));
+    ffmpeg.FS(
+      "writeFile",
+      "input.mp4",
+      await fileToUint8Array(file)
+    );
 
     const duracao = await getDuracao(file);
     const bitrate = calcularBitrate(duracao);
 
-    status.innerText = "⚙️ Comprimindo vídeo...";
+    status.innerText = "🎬 Comprimindo...";
     await ffmpeg.run(
       "-i", "input.mp4",
       "-vcodec", "libx264",
