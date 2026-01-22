@@ -1,17 +1,33 @@
-let ffmpeg;
+
 let fetchFile;
+let ffmpeg;
+let ffmpegLoaded = false;
 
 window.addEventListener("DOMContentLoaded", async () => {
   const status = document.getElementById("status");
 
-  status.innerText = "🧠 Preparando compressor...";
+async function carregarFFmpeg() {
+  if (ffmpegLoaded) return;
 
-  const { createFFmpeg, fetchFile } = FFmpeg;
+  ffmpeg = new FFmpeg.FFmpeg();
 
-const ffmpeg = createFFmpeg({
-  log: true,
-  corePath: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js"
-});
+  await ffmpeg.load({
+    coreURL: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js",
+    wasmURL: "https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.wasm"
+  });
+
+  ffmpegLoaded = true;
+  console.log("FFmpeg pronto pra usar");
+}
+
+async function comprimir() {
+  try {
+    await carregarFFmpeg();
+    alert("FFmpeg carregado com sucesso 🚀");
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 async function comprimir() {
   if (!ffmpeg.isLoaded()) {
